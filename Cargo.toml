@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "rsa",
+]
+exclude = [
+    "ecdsa",
+]
