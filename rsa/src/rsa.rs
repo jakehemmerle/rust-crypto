@@ -1,4 +1,5 @@
 // how the hell does just importing this add gcd support?
+// answer: inside the lib.rs file, it calls gcd_impl! on the integer primitives
 use gcd::Gcd;
 
 #[derive(Debug, Default)]
@@ -38,14 +39,8 @@ pub enum Error {
 impl Default for KeyPair {
     fn default() -> Self {
         KeyPair {
-            public: PublicKey {
-                e: 7,
-                n: 33,
-            },
-            private: PrivateKey {
-                d: 3,
-                n: 33,
-            }
+            public: PublicKey { e: 7, n: 33 },
+            private: PrivateKey { d: 3, n: 33 },
         }
     }
 }
@@ -85,7 +80,7 @@ impl KeyPair {
         i.e. compute e = d-1 mod phi = 3-1 mod 20
         i.e. find a value for e such that phi divides (ed-1)
         i.e. find d such that 20 divides 3e-1.
-        Simple testing (e = 1, 2, ...) gives e = 7 
+        Simple testing (e = 1, 2, ...) gives e = 7
         */
 
         // is this equivalent to e*d == 1 mod phi?
@@ -97,32 +92,20 @@ impl KeyPair {
         };
         let e = multiplicitive_inverse(d, phi);
         assert_eq!(e.gcd(phi), 1);
-        
-        assert_eq!((e*d).gcd(phi), 1);
+
+        assert_eq!((e * d).gcd(phi), 1);
 
         KeyPair {
-            public: PublicKey {
-                e,
-                n,
-            },
-            private: PrivateKey {
-                d,
-                n,
-            }
+            public: PublicKey { e, n },
+            private: PrivateKey { d, n },
         }
     }
 
     /// generate key from known e, d, and n
-    pub fn new_from_values(e: u32, d:u32, n: u32) -> KeyPair {
+    pub fn new_from_values(e: u32, d: u32, n: u32) -> KeyPair {
         KeyPair {
-            public: PublicKey {
-                e,
-                n,
-            },
-            private: PrivateKey {
-                d,
-                n,
-            }
+            public: PublicKey { e, n },
+            private: PrivateKey { d, n },
         }
     }
 }
@@ -142,10 +125,10 @@ impl Signature {
 
 impl PrivateKey {
     pub fn decrypt(&self, ciphertext: &CipherText) -> Message {
-        Message(ciphertext.0.pow(self.d) % self.n)  // same as sign()
+        Message(ciphertext.0.pow(self.d) % self.n) // same as sign()
     }
 
     pub fn sign(&self, message: &Message) -> Signature {
-        Signature(message.0.pow(self.d) % self.n)  // same as decrypt()
+        Signature(message.0.pow(self.d) % self.n) // same as decrypt()
     }
 }
