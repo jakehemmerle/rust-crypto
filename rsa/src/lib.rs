@@ -13,13 +13,13 @@ mod test {
     fn test_create_key() {
         let key = KeyPair::new();
         // why does this not print since I've added Debug for KeyPair and its structs?
-        println!("{:?}", key);
+        println!("{key:?}");
     }
 
     #[test]
     fn test_encrypt_decrypt() {
         let key = KeyPair::default();
-        
+
         let message: Message = Message(7u32);
         let ciphertext = message.encrypt(&key.public);
         assert_eq!(ciphertext, CipherText(28));
@@ -36,13 +36,11 @@ mod test {
         let signature = signer.private.sign(&message);
 
         assert_eq!(signature.verify(&message, &signer.public), true);
-
     }
 
     #[test]
     fn test_dh() {
-        let key = KeyPair::default();
-        let key2 = KeyPair::new_from_values(13u32, 37u32, 60u32);
+        let _key = KeyPair::default();
+        let _key2 = KeyPair::new_from_values(13u32, 37u32, 60u32);
     }
-
 }
